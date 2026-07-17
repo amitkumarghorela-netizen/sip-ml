@@ -1,0 +1,26 @@
+app:
+  name: "Adaptive SIP Research Platform"
+  version: "0.9.0"
+  author: "Amit Kumar"
+
+paths:
+  database: "database/asrp.duckdb"
+  data_cache: "data/cache"
+  reports_output: "reports/output"
+
+data_sources:
+  priority:
+    - yahoo_finance
+    - nse
+    - amfi
+    - stooq
+    - alpha_vantage
+  alpha_vantage_api_key: ""   # optional, fill if you have one
+
+backtest:
+  frequency: "monthly"        # monthly | weekly
+  start_date: "2015-01-01"
+  end_date: "2025-01-01"
+
+strategy_defaults:
+  base_sip: 10000

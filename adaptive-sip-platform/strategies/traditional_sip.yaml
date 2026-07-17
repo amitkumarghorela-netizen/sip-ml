@@ -1,0 +1,9 @@
+name: "Traditional SIP"
+type: "fixed"
+
+config:
+  base_sip: 10000
+
+rules:
+  every_period:
+    action: "current_sip = base_sip"

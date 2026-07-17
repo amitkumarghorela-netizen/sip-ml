@@ -1,0 +1,9 @@
+# Use this config for the ADMIN service in Railway
+# Railway → New Service → use this as separate service
+
+[build]
+builder = "nixpacks"
+
+[deploy]
+startCommand = "streamlit run dashboard/admin_app.py --server.port $PORT --server.address 0.0.0.0 --server.headless true"
+restartPolicyType = "on_failure"

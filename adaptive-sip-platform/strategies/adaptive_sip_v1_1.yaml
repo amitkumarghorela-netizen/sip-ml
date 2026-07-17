@@ -1,0 +1,37 @@
+# Professional Adaptive SIP Strategy v1.1 (Logic Freeze)
+# Author: Amit Kumar
+name: "Adaptive SIP v1.1"
+type: "adaptive"
+
+config:
+  base_sip: 10000
+  minimum_sip: 2500
+  reduction_factor: 0.50      # bull market: multiply previous SIP by this
+  drawdown_step: 5            # % per slab
+  step_multiplier: 0.50       # each slab adds this fraction of base_sip
+  use_max_sip: true
+  max_multiplier: 5.0         # cap = base_sip * max_multiplier
+
+rules:
+  bull:
+    condition: "price > previous_hwm"
+    action: "current_sip = max(previous_sip * reduction_factor, minimum_sip)"
+    update_hwm: true
+
+  sideways:
+    condition: "no_new_hwm and no_new_drawdown_slab"
+    action: "current_sip = previous_sip"
+
+  bear:
+    condition: "drawdown_slab_increased"
+    action: "current_sip = base_sip * (1 + slabs * step_multiplier)"
+    cap: "max_sip = base_sip * max_multiplier"
+
+  recovery:
+    condition: "drawdown_decreasing and no_new_hwm"
+    action: "current_sip = previous_sip   # hold elevated SIP, no reduction"
+
+  new_high:
+    condition: "price > previous_hwm  # after a bear/recovery cycle"
+    action: "current_sip = max(previous_sip * reduction_factor, minimum_sip)"
+    update_hwm: true

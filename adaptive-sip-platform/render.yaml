@@ -1,0 +1,27 @@
+services:
+  # ── 1. Backend API (FastAPI) ─────────────────────────────────────────────────
+  - type: web
+    name: asrp-api
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn api.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: ADMIN_SECRET
+        value: asrp-admin-2025
+      - key: ALLOWED_ORIGINS
+        value: "*"
+    healthCheckPath: /health
+
+  # ── 2. Admin Panel (Streamlit) ───────────────────────────────────────────────
+  - type: web
+    name: asrp-admin
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: streamlit run dashboard/admin_app.py --server.port $PORT --server.address 0.0.0.0 --server.headless true
+    envVars:
+      - key: ADMIN_PASSWORD
+        value: asrp2025
+      - key: ADMIN_SECRET
+        value: asrp-admin-2025
+      - key: BACKEND_URL
+        value: https://asrp-api.onrender.com
